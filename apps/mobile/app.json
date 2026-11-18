@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "CalmStep",
+    "slug": "calmstep",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "hk.hkucs.calmstep",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Placeholder for Stage 10+: CalmStep uses the camera to scan a linking QR code.",
+        "NSMicrophoneUsageDescription": "Placeholder for optional loudness later. CalmStep does not store recordings.",
+        "NSLocalNetworkUsageDescription": "Placeholder for Stage 4+: CalmStep talks to the planner API on your local Wi-Fi."
+      }
+    }
+  }
+}

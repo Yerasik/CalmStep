@@ -104,6 +104,8 @@ Do not scaffold the app yet.
 
 `npx expo start` opens a blank CalmStep screen in **Expo Go on an iPhone** (or the iOS Simulator for layout only). `uvicorn` returns `{"ok": true}`. `.env.example` lists `API_BASE_URL`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`. No Android project is created as a deliverable.
 
+**Status (18 Nov 2026):** done. Expo SDK 58 TypeScript app (`hk.hkucs.calmstep`), FastAPI `GET /health`.
+
 ### Agent prompt
 
 ```

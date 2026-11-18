@@ -1,0 +1,12 @@
+# CalmStep compose stub (Stage 1)
+#
+# The iPhone app and FastAPI do NOT need Docker or a GPU.
+# Start the backend with uvicorn (see backend/README.md).
+# Start the app with Expo Go (see apps/mobile).
+#
+# Optional later: vLLM on a GPU host (not required for demo if Ollama is running).
+# Example only — do not run this unless you have an NVIDIA GPU machine:
+#
+#   docker run --gpus all -p 8000:8000 vllm/vllm-openai:latest --model <hf-model-id>
+#
+# GPU / vLLM is documentation, not a start dependency.
