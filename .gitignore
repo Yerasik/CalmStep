@@ -1,0 +1,61 @@
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# Node / Expo
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# iOS native (Expo prebuild)
+ios/Pods/
+ios/build/
+ios/DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# Do not add an Android app; ignore if Expo generates the folder
+android/
+
+# Python / FastAPI
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Secrets and local env
+.env
+.env.*
+!.env.example
+*.pem
+
+# Models / caches
+.huggingface/
+.ollama/
+*.gguf
+
+# Logs and coverage
+*.log
+coverage/
+htmlcov/
+
+# Ship artefacts
+*.ipa
+*.dSYM.zip
+*.apk
+*.aab
