@@ -138,7 +138,7 @@ You have about **one week until the first demo date** and **eighteen days until 
 
 ---
 
-## Run (Stage 1)
+## Run (Stage 1–2)
 
 Phone and Mac must be on the **same Wi-Fi**. `localhost` on the iPhone is the phone, not the Mac.
 
@@ -150,6 +150,12 @@ npm start
 ```
 
 In the terminal, open the Expo QR code. On the iPhone: install **Expo Go**, scan the QR code. For layout only, press `i` to open the iOS Simulator. There is no Android app or APK.
+
+Stage 2 rehearsal path: RoleGate → Interview → Profile → Plan → PlanReview → Today → SupportedDay → Break → back.
+
+Stage 4: first launch seeds nickname **Kit** and an approved Monday plan in SQLite. Kill Expo Go and reopen: Planner Profile and Supported Day still show that data. Sound starts off; reduce motion starts on.
+
+Deep link to SupportedDay (Expo Go): after the app is open, the path is `/supported/day`. Scheme: `calmstep://supported/day`.
 
 **API**
 
@@ -163,7 +169,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
 
 From the Mac: `curl http://127.0.0.1:8080/health` should print `{"ok":true}`.
 
-Copy `.env.example` to `.env` and set `API_BASE_URL` to `http://<Mac-LAN-IP>:8080` before later stages talk to the API from the phone.
+Copy `.env.example` to `.env` if you keep a local copy. The iPhone reads `extra.apiBaseUrl` in `apps/mobile/app.json` (now `http://172.20.10.4:8080`). iOS notes: `docs/IOS_NETWORKING.md`.
 
 Demo on a **physical iPhone 12** (Supported) and **iPad Air** (Planner). The Simulator is layout-only; camera, mic, and haptics need a real device. Keep a cached approved plan so the Day Strip still works if the LLM host is down. If FastAPI is plain HTTP, iOS App Transport Security needs a localhost/LAN exception documented in Stage 13.
 

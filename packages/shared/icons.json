@@ -1,0 +1,16 @@
+{
+  "icons": [
+    { "id": "eat", "label": "Eat", "asset": "eat.png" },
+    { "id": "school", "label": "School", "asset": "school.png" },
+    { "id": "lunch", "label": "Lunch", "asset": "lunch.png" },
+    { "id": "quiet", "label": "Quiet", "asset": "quiet.png" },
+    { "id": "snack", "label": "Snack", "asset": "snack.png" },
+    { "id": "dinner", "label": "Dinner", "asset": "dinner.png" },
+    { "id": "break", "label": "Break", "asset": "break.png" },
+    { "id": "dentist", "label": "Dentist", "asset": "dentist.png" },
+    { "id": "swim", "label": "Swim", "asset": "swim.png" },
+    { "id": "bus", "label": "Bus", "asset": "bus.png" },
+    { "id": "sleep", "label": "Sleep", "asset": "sleep.png" },
+    { "id": "home", "label": "Home", "asset": "home.png" }
+  ]
+}

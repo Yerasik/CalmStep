@@ -117,6 +117,37 @@ Form / mobility: iPhone 12 in the hand for Supported (one thumb, Break in the bo
 
 ---
 
+## Stage 5 server (locked 22 Nov 2026)
+
+- Auth: **none** on the LAN.
+- Default API base: `http://172.20.10.4:8080` (this Mac’s current `en0` address). Change `apps/mobile/app.json` extra.apiBaseUrl when Wi-Fi changes.
+
+---
+
+## Stage 4 storage (locked 22 Nov 2026)
+
+- SQLite: `expo-sqlite` tables `profiles`, `plans`, `settings`.
+- Clock: device-local dates and `HH:MM`. No UTC conversion.
+- Settings keys (SharedPreferences analog): `active_role`, `reduce_motion`, `sound_enabled`, `linked_token`.
+
+---
+
+## Stage 3 palette (locked 22 Nov 2026)
+
+Muted, high contrast (4.5:1 on body text). Font 16 / 20 / 28. Reduce motion default **on**.
+
+| Token | Hex |
+|---|---|
+| bg | #F4F0E6 |
+| surface | #FFFcf7 |
+| text | #1A1A1A |
+| accent | #1A4A3A |
+| danger | #8B2E2E |
+| track | #D4CDBF |
+| marker | #9A3412 |
+
+---
+
 ## Still open (not Stage 0 blockers)
 
 - Exact iOS version on the iPhone 12 and iPad Air (check Settings → General → About before Stage 13).

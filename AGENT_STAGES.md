@@ -169,6 +169,8 @@ Screens to create as placeholders:
 
 You can tap through every screen with dummy titles. Supported stack has no tab bar. iOS swipe-back and the header Back control behave predictably. Safe area (notch / Dynamic Island / home indicator) is respected. Deep link `/supported/day` opens SupportedDay.
 
+**Status (22 Nov 2026):** done. Expo Router stacks/tabs. Adult-self = toggle on same account. After approve = go Today.
+
 ### Agent prompt
 
 ```
@@ -208,6 +210,8 @@ Do not persist data. Do not call the network.
 ### Definition of done
 
 A `theme.ts` and a few layout primitives exist. RoleGate, SupportedDay placeholder, and Break placeholder use them. Break button is in the bottom third and at least 56 pt tall (safe area above the home indicator). No dense menus on Supported screens.
+
+**Status (22 Nov 2026):** done. Palette in `src/ui/theme.ts`. Reduce motion default on. No animation.
 
 ### Agent prompt
 
@@ -255,6 +259,8 @@ Plan: `date`, `items[]` with `start`, `end`, `title`, `icon_id`, `load`; `suppor
 ### Definition of done
 
 Seed a sample profile and a sample approved plan. Kill the app, reopen, PlannerProfile and SupportedDay still show the seed. Settings (role, reduce-motion, sound) persist like SharedPreferences.
+
+**Status (22 Nov 2026):** done. expo-sqlite, stores, seed Kit + Monday plan. No FastAPI.
 
 ### Agent prompt
 
@@ -304,6 +310,8 @@ Endpoints (minimum):
 ### Definition of done
 
 From the **physical iPhone** (not only Simulator), Plan screen can hit `/health` and `/plans/generate` (stub) and show JSON. Failures show a calm error, not a crash. Timeouts are finite.
+
+**Status (22 Nov 2026):** done. FastAPI stubs + 10s apiClient. Auth none. Base `http://172.20.10.4:8080`. See `docs/IOS_NETWORKING.md`.
 
 ### Agent prompt
 

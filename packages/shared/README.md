@@ -1,5 +1,8 @@
 # packages/shared
 
-Placeholder for Profile and Plan JSON schemas (TypeScript types + JSON Schema).
+Profile and DayPlan TypeScript types plus JSON Schema. Stage 4.
 
-Schemas are added in Stage 3. Do not put models here yet.
+- `src/profile.ts`, `src/plan.ts`
+- `schemas/profile.schema.json`, `schemas/dayplan.schema.json`
+
+Mobile imports `@calmstep/shared`. Do not put SQL or UI here.

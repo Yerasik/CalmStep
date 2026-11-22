@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calmstep.local/schemas/dayplan.json",
+  "title": "DayPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["date", "items", "supports"],
+  "properties": {
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Local calendar date YYYY-MM-DD. No timezone conversion."
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["start", "end", "title", "icon_id", "load"],
+        "properties": {
+          "start": { "type": "string", "pattern": "^[0-9]{2}:[0-9]{2}$" },
+          "end": { "type": "string", "pattern": "^[0-9]{2}:[0-9]{2}$" },
+          "title": { "type": "string" },
+          "icon_id": { "type": "string" },
+          "load": { "type": "string", "enum": ["low", "mid", "high"] }
+        }
+      }
+    },
+    "supports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "after_item", "reason"],
+        "properties": {
+          "type": { "type": "string" },
+          "after_item": { "type": "integer", "minimum": 0 },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}

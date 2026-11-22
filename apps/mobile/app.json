@@ -2,6 +2,7 @@
   "expo": {
     "name": "CalmStep",
     "slug": "calmstep",
+    "scheme": "calmstep",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,8 +13,21 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Placeholder for Stage 10+: CalmStep uses the camera to scan a linking QR code.",
         "NSMicrophoneUsageDescription": "Placeholder for optional loudness later. CalmStep does not store recordings.",
-        "NSLocalNetworkUsageDescription": "Placeholder for Stage 4+: CalmStep talks to the planner API on your local Wi-Fi."
+        "NSLocalNetworkUsageDescription": "CalmStep talks to the planner API on your local Wi-Fi so the iPhone can reach the Mac.",
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        }
       }
+    },
+    "extra": {
+      "apiBaseUrl": "http://172.20.10.4:8080"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite"
+    ],
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }

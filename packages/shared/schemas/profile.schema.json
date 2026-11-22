@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calmstep.local/schemas/profile.json",
+  "title": "Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "display_name",
+    "answered_by",
+    "age_band",
+    "communication",
+    "sensory_triggers",
+    "overload_signs",
+    "coping_strategies",
+    "transition_warnings_min",
+    "motivators",
+    "must_stay_fixed"
+  ],
+  "properties": {
+    "display_name": { "type": "string", "minLength": 1 },
+    "answered_by": { "type": "string", "enum": ["guardian", "self"] },
+    "age_band": { "type": "string" },
+    "communication": { "type": "array", "items": { "type": "string" } },
+    "sensory_triggers": { "type": "array", "items": { "type": "string" } },
+    "overload_signs": { "type": "array", "items": { "type": "string" } },
+    "coping_strategies": { "type": "array", "items": { "type": "string" } },
+    "transition_warnings_min": { "type": "array", "items": { "type": "integer" } },
+    "motivators": { "type": "array", "items": { "type": "string" } },
+    "must_stay_fixed": { "type": "array", "items": { "type": "string" } }
+  }
+}
