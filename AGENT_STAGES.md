@@ -311,7 +311,7 @@ Endpoints (minimum):
 
 From the **physical iPhone** (not only Simulator), Plan screen can hit `/health` and `/plans/generate` (stub) and show JSON. Failures show a calm error, not a crash. Timeouts are finite.
 
-**Status (22 Nov 2026):** done. FastAPI stubs + 10s apiClient. Auth none. Base `http://172.20.10.4:8080`. See `docs/IOS_NETWORKING.md`.
+**Status (22 Nov 2026):** done. FastAPI stubs + 10s apiClient. Auth none. Base `http://172.20.10.4:8081`. See `docs/IOS_NETWORKING.md`.
 
 ### Agent prompt
 
@@ -367,6 +367,8 @@ Validator rules (reject and retry max 2, then fixture/template):
 
 Planner can finish a scripted interview and see a Profile Card. Planner types “school 8–3, dentist 16:00, swimming” and gets a plan, validator output, and Approve. Invalid model output is retried then replaced by a template. Supported view still only updates after Approve.
 
+**Status (22 Nov 2026):** done. Ollama `/v1` + fixtures fallback. Interview max 10. Validator retries then template. Planner Approve writes SQLite.
+
 ### Agent prompt
 
 ```
@@ -413,6 +415,8 @@ Write backend/PROMPTING.md with the system prompts (needed for peer notes).
 
 Six pictograms sit on a track. A marker sits at “now”. Current card title, until-time, and remaining minutes update. Reduce-motion works. App idle for a few minutes still tracks time without jank.
 
+**Status (22 Nov 2026):** done. Reanimated marker. Device clock only (`debug_clock = none`). Reduce motion snaps each minute.
+
 ### Agent prompt
 
 ```
@@ -451,6 +455,8 @@ Do not add sound in this stage.
 ### Definition of done
 
 Break button opens coping steps for *this* profile. Done returns to Day Strip. Sound respects settings. Haptic on break, skipped if reduce-motion or if you decide haptics off.
+
+**Status (22 Nov 2026):** done. Profile coping steps + default fallback. Haptic on open (skipped if reduce motion). Chime none. Today remembers break used in RAM only.
 
 ### Agent prompt
 
@@ -494,6 +500,8 @@ PlannerToday may later show "break used" in memory only; do not build weekly sum
 
 Planner shows a QR (or 6-digit PIN). Supported role enters PIN or scans. After that, SupportedDay loads that profile’s approved plan offline. Turning on airplane mode still shows the plan.
 
+**Status (22 Nov 2026):** done. PIN 6 + QR 10 min. expo-camera. PIN works if camera denied. Accept caches profile+plan.
+
 ### Agent prompt
 
 ```
@@ -534,6 +542,8 @@ Do not add location APIs. Out of scope.
 
 Leaving SupportedDay and returning does not duplicate intervals. Marker is correct. Optional notification only if decided yes, and it uses the approved plan, sound off by default.
 
+**Status (22 Nov 2026):** done. Bound clockService, one interval, focus/blur. `lead_notification = false`. No wake lock.
+
 ### Agent prompt
 
 ```
@@ -573,6 +583,8 @@ Document in a short comment how this maps to started/bound services (lecture) vs
 
 On a real iPhone, loud sound offers Break. No wav/pcm saved. PlannerToday can show last offer time in memory. Simulator path disabled with a message.
 
+**Status (22 Nov 2026):** skipped. `enable_n2 = false`. See `docs/N2_SKIPPED.md`.
+
 ### Agent prompt
 
 ```
@@ -608,6 +620,8 @@ If true:
 ### Definition of done
 
 `backend` has pytest IO tests for validator (overlap, bad icon, missing fixed routine, too many items). Mobile has a `docs/TEST_SCRIPT.md` smoke path matching the 5-minute demo. You ran it once on the demo phone.
+
+**Status (22 Nov 2026):** done. pytest 8 passed on `/plans/validate` rules 1–6. `docs/TEST_SCRIPT.md`. UAT = scripted only. Smoke on the physical iPhone still to tick in that file.
 
 ### Agent prompt
 
@@ -647,6 +661,8 @@ Do not add new features.
 ### Definition of done
 
 `docs/INSTALL.md` with: Mac + iPhone same Wi-Fi, Expo Go QR (or Xcode Run), FastAPI LAN URL, ATS/LAN notes, backend start, backup screen recording if live LLM dies. No Android APK instructions.
+
+**Status (22 Nov 2026):** done. `docs/INSTALL.md`. Build = Expo Go. Bundle id `hk.hkucs.calmstep`.
 
 ### Agent prompt
 

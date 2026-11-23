@@ -51,12 +51,24 @@ class HealthResponse(BaseModel):
 class InterviewTurnIn(BaseModel):
     reply: str | None = None
     turn_index: int = 0
+    session_id: str | None = None
 
 
 class InterviewTurnOut(BaseModel):
+    session_id: str
     question: str
     turn_index: int
     done: bool
+    profile: ProfileIn | None = None
+    source: Literal["llm", "fixture"] = "fixture"
+
+
+class InterviewLlmOut(BaseModel):
+    model_config = {"extra": "ignore"}
+
+    kind: Literal["question", "profile"]
+    question: str | None = None
+    profile: ProfileIn | None = None
 
 
 class GenerateIn(BaseModel):
@@ -78,8 +90,35 @@ class GenerateOut(BaseModel):
     id: str
     plan: DayPlanIn
     validation: ValidateOut
+    source: Literal["llm", "template"] = "template"
+    attempts: int = 0
+    planner_notes: str = ""
 
 
 class ApproveOut(BaseModel):
     id: str
     approved: bool
+
+
+class LinkStartIn(BaseModel):
+    profile: ProfileIn | None = None
+    plan: DayPlanIn | None = None
+
+
+class LinkStartOut(BaseModel):
+    pin: str
+    qr_payload: str
+    expires_at: str
+
+
+class LinkAcceptIn(BaseModel):
+    pin: str | None = None
+    qr_payload: str | None = None
+    token: str | None = None
+
+
+class LinkAcceptOut(BaseModel):
+    profile_id: str
+    profile: ProfileIn
+    plan: DayPlanIn | None = None
+    token: str

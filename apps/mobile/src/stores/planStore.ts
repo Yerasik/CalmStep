@@ -1,12 +1,22 @@
 import type { DayPlan, PlanItem } from '@calmstep/shared';
 
+import { remainingMinutesUntil } from '../clock/waking';
 import { getDb, localHm, nowLocalIso } from '../db/database';
 
 type PlanRow = { id: string; date: string; approved: number; json: string };
 
 export type StoredPlan = DayPlan & { id: string; approved: boolean };
 
-export type DraftPlan = { id: string; plan: DayPlan };
+export type PlanValidation = { ok: boolean; violations: string[] };
+
+export type DraftPlan = {
+  id: string;
+  plan: DayPlan;
+  validation: PlanValidation;
+  source: 'llm' | 'template';
+  attempts: number;
+  planner_notes: string;
+};
 
 let lastDraft: DraftPlan | null = null;
 
@@ -48,10 +58,39 @@ export async function loadLatestApprovedPlan(): Promise<StoredPlan | null> {
 }
 
 export function pickCurrentItem(plan: DayPlan, now = new Date()): PlanItem | null {
+  const card = pickNowCard(plan, now);
+  return card?.item ?? null;
+}
+
+export type NowCard = {
+  item: PlanItem;
+  kind: 'now' | 'next';
+  until: string;
+  remaining: number;
+};
+
+export function pickNowCard(plan: DayPlan, now = new Date()): NowCard | null {
   if (plan.items.length === 0) {
     return null;
   }
   const t = localHm(now);
-  const match = plan.items.find((item) => item.start <= t && t < item.end);
-  return match ?? plan.items[0];
+  const current = plan.items.find((item) => item.start <= t && t < item.end);
+  if (current) {
+    return {
+      item: current,
+      kind: 'now',
+      until: current.end,
+      remaining: remainingMinutesUntil(current.end, now),
+    };
+  }
+  const upcoming = plan.items.find((item) => item.start > t);
+  if (!upcoming) {
+    return null;
+  }
+  return {
+    item: upcoming,
+    kind: 'next',
+    until: upcoming.start,
+    remaining: remainingMinutesUntil(upcoming.start, now),
+  };
 }

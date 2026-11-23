@@ -1,43 +1,40 @@
-import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, font } from './theme';
+import { colors } from './theme';
 
 type PictogramProps = {
   size?: number;
-  source?: ImageSourcePropType;
   fallback?: string;
   label: string;
 };
 
-/** Square ImageView analog. Asset catalogue is later; emoji keeps the slot from looking broken. */
-export function Pictogram({ size = 96, source, fallback = '■', label }: PictogramProps) {
+/** Ch 10 ImageView analog: a recognisable emoji glyph in a soft card (not a solid square). */
+export function Pictogram({ size = 96, fallback = '●', label }: PictogramProps) {
   return (
     <View
       accessibilityLabel={label}
       style={[
         styles.box,
-        { width: size, height: size, borderRadius: Math.max(12, size / 8) },
+        {
+          width: size,
+          height: size,
+          borderRadius: Math.max(14, size / 4),
+        },
       ]}
     >
-      {source ? (
-        <Image source={source} style={{ width: size - 16, height: size - 16 }} resizeMode="contain" />
-      ) : (
-        <Text style={[styles.fallback, { fontSize: Math.min(size * 0.45, 40) }]}>{fallback}</Text>
-      )}
+      <Text style={{ fontSize: size * 0.46 }} allowFontScaling={false}>
+        {fallback}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   box: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceTint,
     borderWidth: 2,
-    borderColor: colors.track,
+    borderColor: colors.hairline,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  fallback: {
-    color: colors.text,
-    fontSize: font.display,
   },
 });

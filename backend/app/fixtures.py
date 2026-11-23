@@ -47,9 +47,13 @@ def fixture_plan() -> DayPlanIn:
 
 INTERVIEW_SCRIPT = [
     "What nickname should we use? (no real name)",
-    "How does Kit like to be told things: short words, pictures, or both?",
-    "Which sounds or crowds are hard?",
-    "What does Kit do when overloaded (no diagnosis, just what you see)?",
+    "Who is answering: guardian or self?",
+    "What age band? For example 7-10.",
+    "How should we tell things: short words, pictures, or both?",
+    "Which sounds, lights, or crowds are hard? (sensory load only)",
+    "What do you see first when overload is coming? (no diagnosis)",
     "What helps: headphones, a quiet corner, water, something else?",
-    "What must stay at a fixed time (for example lunch)?",
+    "How many minutes of warning before a change? For example 5, 10.",
+    "What motivators help the day go well?",
+    "What must stay at a fixed time? For example lunch at 12:00.",
 ]

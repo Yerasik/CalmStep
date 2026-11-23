@@ -7,9 +7,24 @@ type TextFieldProps = {
   value: string;
   onChangeText: (text: string) => void;
   multiline?: boolean;
+  keyboardType?: 'default' | 'number-pad';
+  maxLength?: number;
+  textAlign?: 'left' | 'center';
+  large?: boolean;
+  onSubmit?: () => void;
 };
 
-export function TextField({ label, value, onChangeText, multiline = false }: TextFieldProps) {
+export function TextField({
+  label,
+  value,
+  onChangeText,
+  multiline = false,
+  keyboardType = 'default',
+  maxLength,
+  textAlign = 'left',
+  large = false,
+  onSubmit,
+}: TextFieldProps) {
   return (
     <View>
       <Text style={styles.label}>{label}</Text>
@@ -17,7 +32,16 @@ export function TextField({ label, value, onChangeText, multiline = false }: Tex
         value={value}
         onChangeText={onChangeText}
         multiline={multiline}
-        style={[styles.input, multiline && styles.multiline]}
+        keyboardType={keyboardType}
+        maxLength={maxLength}
+        textAlign={textAlign}
+        autoCorrect={false}
+        autoComplete="off"
+        importantForAutofill="no"
+        returnKeyType="done"
+        blurOnSubmit
+        onSubmitEditing={onSubmit}
+        style={[styles.input, multiline && styles.multiline, large && styles.large]}
         placeholderTextColor="#777777"
       />
     </View>
@@ -44,5 +68,11 @@ const styles = StyleSheet.create({
     minHeight: 88,
     paddingTop: 12,
     textAlignVertical: 'top',
+  },
+  large: {
+    minHeight: 72,
+    fontSize: font.display,
+    letterSpacing: 8,
+    fontWeight: '700',
   },
 });

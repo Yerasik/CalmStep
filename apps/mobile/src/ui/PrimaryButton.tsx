@@ -9,12 +9,9 @@ type PrimaryButtonProps = {
   flex?: number;
 };
 
-/** Finger-friendly control: min 56 pt (about 8 mm at 163 ppi), one label. */
+/** Finger-friendly control: min 56 pt, one label, pressed state. */
 export function PrimaryButton({ label, onPress, variant = 'accent', flex }: PrimaryButtonProps) {
   const isOutline = variant === 'outline';
-  const bg =
-    variant === 'danger' ? colors.danger : variant === 'outline' ? 'transparent' : colors.accent;
-  const fg = isOutline ? colors.accent : '#FFFFFF';
 
   return (
     <Pressable
@@ -22,16 +19,21 @@ export function PrimaryButton({ label, onPress, variant = 'accent', flex }: Prim
       onPress={onPress}
       style={({ pressed }) => [
         styles.base,
-        {
-          backgroundColor: bg,
-          borderColor: colors.accent,
-          borderWidth: isOutline ? 2 : 0,
-          flex,
-        },
+        variant === 'accent' && styles.accent,
+        variant === 'danger' && styles.danger,
+        isOutline && styles.outline,
         pressed && styles.pressed,
+        flex !== undefined ? { flex } : null,
       ]}
     >
-      <Text style={[styles.label, { color: fg }]}>{label}</Text>
+      <Text
+        style={[
+          styles.label,
+          isOutline ? { color: colors.accent } : { color: '#FFFFFF' },
+        ]}
+      >
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -39,16 +41,29 @@ export function PrimaryButton({ label, onPress, variant = 'accent', flex }: Prim
 const styles = StyleSheet.create({
   base: {
     minHeight: tapMin,
-    borderRadius: 12,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 18,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  accent: {
+    backgroundColor: colors.accent,
+  },
+  danger: {
+    backgroundColor: colors.danger,
+  },
+  outline: {
+    backgroundColor: 'transparent',
+    borderColor: colors.accent,
   },
   label: {
     fontSize: font.title,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   pressed: {
-    opacity: 0.85,
+    opacity: 0.82,
+    transform: [{ scale: 0.98 }],
   },
 });

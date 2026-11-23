@@ -17,12 +17,14 @@ export async function loadProfile(): Promise<Profile | null> {
   return JSON.parse(row.json) as Profile;
 }
 
-export async function saveProfile(profile: Profile): Promise<void> {
+export async function saveProfile(profile: Profile, id: string = SEED_PROFILE_ID): Promise<void> {
   const db = await getDb();
   await db.runAsync(
-    'UPDATE profiles SET json = ?, updated_at = ? WHERE id = ?',
+    `INSERT INTO profiles (id, json, updated_at)
+     VALUES (?, ?, ?)
+     ON CONFLICT(id) DO UPDATE SET json = excluded.json, updated_at = excluded.updated_at`,
+    id,
     JSON.stringify(profile),
     nowLocalIso(),
-    SEED_PROFILE_ID,
   );
 }

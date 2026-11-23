@@ -1,9 +1,9 @@
-from uuid import uuid4
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.fixtures import INTERVIEW_SCRIPT, fixture_plan, fixture_profile
+from app.generate import generate_plan as run_generate
+from app.interview import interview_turn
+from app.link import accept_link, start_link
 from app.memory import get_plan, save_plan
 from app.models import (
     ApproveOut,
@@ -12,6 +12,10 @@ from app.models import (
     HealthResponse,
     InterviewTurnIn,
     InterviewTurnOut,
+    LinkAcceptIn,
+    LinkAcceptOut,
+    LinkStartIn,
+    LinkStartOut,
     ValidateIn,
     ValidateOut,
 )
@@ -33,23 +37,15 @@ def health() -> HealthResponse:
 
 
 @app.post("/interview/turn", response_model=InterviewTurnOut)
-def interview_turn(body: InterviewTurnIn) -> InterviewTurnOut:
-    """Stub script. No LLM in Stage 5."""
-    index = max(0, body.turn_index)
-    if index >= len(INTERVIEW_SCRIPT):
-        return InterviewTurnOut(question="Interview complete. Review the Profile Card.", turn_index=index, done=True)
-    return InterviewTurnOut(question=INTERVIEW_SCRIPT[index], turn_index=index + 1, done=False)
+def interview(body: InterviewTurnIn) -> InterviewTurnOut:
+    """One question at a time. Max 10. Then Profile JSON. Screen talks via a store."""
+    return interview_turn(body.session_id, body.reply, body.turn_index)
 
 
 @app.post("/plans/generate", response_model=GenerateOut)
-def generate_plan(_body: GenerateIn) -> GenerateOut:
-    """Ignore LLM. Return a fixture that passes Stage 6 validate."""
-    plan = fixture_plan()
-    profile = _body.profile or fixture_profile()
-    validation = validate_plan(plan, profile)
-    plan_id = str(uuid4())
-    save_plan(plan_id, plan, approved=False)
-    return GenerateOut(id=plan_id, plan=plan, validation=validation)
+def generate_plan(body: GenerateIn) -> GenerateOut:
+    """LLM proposes a DayPlan. Validator checks. Retry twice, then template."""
+    return run_generate(body)
 
 
 @app.post("/plans/validate", response_model=ValidateOut)
@@ -64,3 +60,14 @@ def approve(plan_id: str) -> ApproveOut:
         raise HTTPException(status_code=404, detail="Unknown plan id")
     save_plan(plan_id, row["plan"], approved=True)
     return ApproveOut(id=plan_id, approved=True)
+
+
+@app.post("/link/start", response_model=LinkStartOut)
+def link_start(body: LinkStartIn) -> LinkStartOut:
+    """PIN + signed QR. TTL 10 minutes. Do not log the token."""
+    return start_link(body)
+
+
+@app.post("/link/accept", response_model=LinkAcceptOut)
+def link_accept(body: LinkAcceptIn) -> LinkAcceptOut:
+    return accept_link(body)

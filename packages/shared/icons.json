@@ -11,6 +11,12 @@
     { "id": "swim", "label": "Swim", "asset": "swim.png" },
     { "id": "bus", "label": "Bus", "asset": "bus.png" },
     { "id": "sleep", "label": "Sleep", "asset": "sleep.png" },
-    { "id": "home", "label": "Home", "asset": "home.png" }
+    { "id": "home", "label": "Home", "asset": "home.png" },
+    { "id": "homework", "label": "Homework", "asset": "homework.png" },
+    { "id": "park", "label": "Park", "asset": "park.png" },
+    { "id": "bath", "label": "Bath", "asset": "bath.png" },
+    { "id": "play", "label": "Play", "asset": "play.png" },
+    { "id": "walk", "label": "Walk", "asset": "walk.png" },
+    { "id": "shop", "label": "Shop", "asset": "shop.png" }
   ]
 }

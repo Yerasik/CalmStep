@@ -138,22 +138,40 @@ You have about **one week until the first demo date** and **eighteen days until 
 
 ---
 
-## Run (Stage 1–2)
+## Run (iPhone / iPad only)
 
-Phone and Mac must be on the **same Wi-Fi**. `localhost` on the iPhone is the phone, not the Mac.
+Full install, signing, ATS, and offline notes: **`docs/INSTALL.md`**. Bundle id `hk.hkucs.calmstep`. Demo: Expo Go. iPhone 12 + iPad Air, same Wi-Fi as the Mac.
 
-**Mobile (Expo Go on iPhone)**
+**Phone**
+
+Expo SDK 58 needs **Node 20+**. If this machine’s `/usr/bin/node` is too old, use the wrapper (Metro on **8082**):
 
 ```
 cd apps/mobile
-npm start
+npx expo start
+# lab image fallback:
+bash scripts/start-expo.sh
 ```
 
-In the terminal, open the Expo QR code. On the iPhone: install **Expo Go**, scan the QR code. For layout only, press `i` to open the iOS Simulator. There is no Android app or APK.
+Install **Expo Go** from the App Store. Scan the Expo QR. Simulator is layout-only.
 
 Stage 2 rehearsal path: RoleGate → Interview → Profile → Plan → PlanReview → Today → SupportedDay → Break → back.
 
 Stage 4: first launch seeds nickname **Kit** and an approved Monday plan in SQLite. Kill Expo Go and reopen: Planner Profile and Supported Day still show that data. Sound starts off; reduce motion starts on.
+
+Stage 6: Interview talks to `POST /interview/turn` (one question, max 10, then Profile). Plan tab: type a day (try `school 8–3, dentist 16:00, swimming`), Generate, read validator badges, Approve to SQLite. Ollama on the Mac is optional; if it is down the backend returns a scripted interview and a template plan. Supported view still only changes after Approve.
+
+Stage 7: Supported Day is the Day Strip. Large NOW pictogram, until-time, remaining minutes, six (or more) track pictograms, and a “you are here” marker on 06:00–22:00. Reduce motion (on by default) snaps the marker each minute; turn it off in Profile to see the Reanimated slide. No sound in this stage.
+
+Stage 8: **I need a break** lists this profile’s coping steps (Kit seed: headphones, quiet corner, water). Empty list uses deep breaths / quiet corner / drink water. One **Done** button. Light haptic on open unless reduce motion is on. No chime file. Planner Today can show “break used” for this app session only.
+
+Stage 9: Planner Today/Profile show a 6-digit PIN and QR (10 minutes). Supported **Link with PIN or QR** types the PIN (demo-safe) or scans with the camera. That writes the profile and approved plan to SQLite. Airplane mode: open Supported Day; it still reads the cache. No location APIs.
+
+Stage 10: one `clockService` interval. Supported Day and Planner Today subscribe on focus and unsubscribe on blur. Leave and return: no duplicate timers; marker uses the device clock. No lead notification. No LLM in this module. iOS may still suspend the app.
+
+Stage 11: N2 microphone loudness is **skipped**. Reasons: `docs/N2_SKIPPED.md`. Break stays a button, not a live mic.
+
+Stage 12: `cd backend && python3 -m pytest -q` (validator rules 1–6). Phone smoke and UAT script: `docs/TEST_SCRIPT.md`.
 
 Deep link to SupportedDay (Expo Go): after the app is open, the path is `/supported/day`. Scheme: `calmstep://supported/day`.
 
@@ -164,14 +182,14 @@ cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8081
 ```
 
-From the Mac: `curl http://127.0.0.1:8080/health` should print `{"ok":true}`.
+From this machine: `curl http://127.0.0.1:8081/health` should print `{"ok":true}`.
 
-Copy `.env.example` to `.env` if you keep a local copy. The iPhone reads `extra.apiBaseUrl` in `apps/mobile/app.json` (now `http://172.20.10.4:8080`). iOS notes: `docs/IOS_NETWORKING.md`.
+Copy `.env.example` to `.env` if you keep a local copy. The iPhone reads `extra.apiBaseUrl` in `apps/mobile/app.json` (now `http://172.20.10.4:8081`). iOS notes: `docs/IOS_NETWORKING.md`.
 
-Demo on a **physical iPhone 12** (Supported) and **iPad Air** (Planner). The Simulator is layout-only; camera, mic, and haptics need a real device. Keep a cached approved plan so the Day Strip still works if the LLM host is down. If FastAPI is plain HTTP, iOS App Transport Security needs a localhost/LAN exception documented in Stage 13.
+Demo on a **physical iPhone 12** (Supported) and **iPad Air** (Planner). Camera and haptics need a real device. Keep a cached approved plan so the Day Strip still works if the LLM host is down. LAN HTTP: `docs/INSTALL.md` and `docs/IOS_NETWORKING.md`.
 
 ---
 

@@ -100,7 +100,7 @@ Form / mobility: iPhone 12 in the hand for Supported (one thumb, Break in the bo
 
 ## Demo-day failure plan
 
-1. Mac runs FastAPI on Wi-Fi LAN; iPhone 12 and iPad Air use `http://<mac-lan-ip>:8080`.
+1. Mac runs FastAPI on Wi-Fi LAN; iPhone 12 and iPad Air use `http://<mac-lan-ip>:8081`.
 2. If the LLM/Ollama is dead: backend returns **fixture** Profile and Plan JSON; validator still runs.
 3. If Wi-Fi is dead: open Supported on the **cached** approved plan (F8). Day Strip and Break still work.
 4. If camera is awkward: **PIN**, not QR.
@@ -117,10 +117,73 @@ Form / mobility: iPhone 12 in the hand for Supported (one thumb, Break in the bo
 
 ---
 
+## Stage 13 install (locked 22 Nov 2026)
+
+- Build: **expo-go**. Xcode development/Ad-Hoc only if Expo Go blocks camera or LAN HTTP.
+- Bundle id: **hk.hkucs.calmstep**.
+
+---
+
+## Stage 12 testing (locked 22 Nov 2026)
+
+- UAT people: **scripted only**. No children. No named volunteers yet.
+
+---
+
+## Stage 11 N2 (locked 22 Nov 2026)
+
+- **enable_n2 = false.** See `docs/N2_SKIPPED.md`.
+- Would-have: `skip_if_reduce_motion = true` (reduce motion is already the default).
+
+---
+
+## Stage 10 clock (locked 22 Nov 2026)
+
+- Lead notification before the next item: **false**. No `expo-notifications`. Sound stays off.
+- Clock is a **bound** module (subscribe on focus). Not a started background service. iOS may suspend the app.
+
+---
+
+## Stage 9 linking (locked 22 Nov 2026)
+
+- PIN length: **6**.
+- QR TTL: **10 minutes**, HMAC-signed one-time token from FastAPI. Do not log the token.
+- Camera: **expo-camera**. If permission is denied, PIN still works.
+- Same-phone demo: type the PIN on Link device. Two-device: scan QR.
+- After accept: profile + approved plan written to SQLite; `settings.linked_token` set. Supported Day then reads SQLite only (airplane mode).
+
+---
+
+## Stage 8 Break (locked 22 Nov 2026)
+
+- Default coping if profile list is empty: **deep breaths, quiet corner, drink water**.
+- Chime: **none** (no bundled ogg). Sound stays off by default; no surprise audio.
+- Haptic on opening Break: **yes**, light impact. **Skip if reduce_motion**.
+- “Break used” on Planner Today is **in-memory only** this session. No weekly summary (N3).
+
+---
+
+## Stage 7 Day Strip (locked 22 Nov 2026)
+
+- Animation: **react-native-reanimated** (plus `react-native-worklets` for SDK 58).
+- Marker time: **device local clock**. No hidden debug clock (`debug_clock = none`).
+- Reduce motion (settings default on, or iOS Reduce Motion): marker snaps once per minute. Countdown still ticks every second.
+
+---
+
+## Stage 6 LLM (locked 22 Nov 2026)
+
+- Provider: **Ollama** OpenAI-compatible `http://127.0.0.1:11434/v1`
+- Model: **llama3.1:70b** (the 8B `llama3.1` tag is not installed on this machine; 70B is, and is more likely to return valid plan JSON. Interview still uses the scripted 10 questions when `IF_LLM_DOWN=fixtures`. Validator still checks every plan.)
+- API key: empty (local Ollama)
+- If LLM down: **fixtures** (scripted interview + template plan). Validator still runs. Planner still must Approve.
+
+---
+
 ## Stage 5 server (locked 22 Nov 2026)
 
 - Auth: **none** on the LAN.
-- Default API base: `http://172.20.10.4:8080` (this Mac’s current `en0` address). Change `apps/mobile/app.json` extra.apiBaseUrl when Wi-Fi changes.
+- Default API base: `http://172.20.10.4:8081` (LAN IP plus a free port; 8080 was already in use). Change `apps/mobile/app.json` extra.apiBaseUrl when Wi-Fi or port changes.
 
 ---
 

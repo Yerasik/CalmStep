@@ -1,10 +1,11 @@
 import type { AnsweredBy, Profile } from '@calmstep/shared';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { loadProfile, saveProfile } from '../../stores/profileStore';
 import { loadSettings, saveSettings } from '../../stores/settingsStore';
 import { Column } from '../../ui/Column';
+import { LinkShare } from '../../ui/LinkShare';
 import { PrimaryButton } from '../../ui/PrimaryButton';
 import { Row } from '../../ui/Row';
 import { Screen } from '../../ui/Screen';
@@ -68,6 +69,7 @@ export default function PlannerProfileScreen() {
   }, []);
 
   async function onSave() {
+    Keyboard.dismiss();
     setStatus('Saving…');
     const profile: Profile = {
       display_name: displayName.trim() || 'Kit',
@@ -96,18 +98,16 @@ export default function PlannerProfileScreen() {
   }
 
   return (
-    <Screen
-      bottom={<PrimaryButton label="Save profile" onPress={() => void onSave()} />}
-    >
+    <Screen bottom={<PrimaryButton label="Save profile" onPress={() => void onSave()} />}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scroll}>
         <Column gap={space.md}>
           <Text style={styles.title} accessibilityRole="header">
-            PlannerProfile
+            Profile
           </Text>
           <Text style={styles.note}>{status}</Text>
           <TextField label="Nickname" value={displayName} onChangeText={setDisplayName} />
           <TextField label="Age band" value={ageBand} onChangeText={setAgeBand} />
-          <Text style={styles.note}>Answered by</Text>
+          <Text style={styles.section}>Answered by</Text>
           <Row>
             <PrimaryButton
               flex={1}
@@ -128,16 +128,12 @@ export default function PlannerProfileScreen() {
             onChangeText={setCommunication}
             multiline
           />
-          <TextField
-            label="Sensory triggers"
-            value={triggers}
-            onChangeText={setTriggers}
-            multiline
-          />
+          <TextField label="Sensory triggers" value={triggers} onChangeText={setTriggers} multiline />
           <TextField label="Overload signs" value={signs} onChangeText={setSigns} multiline />
           <TextField label="Coping strategies" value={coping} onChangeText={setCoping} multiline />
           <TextField label="Motivators" value={motivators} onChangeText={setMotivators} multiline />
           <TextField label="Must stay fixed" value={fixed} onChangeText={setFixed} multiline />
+          <Text style={styles.section}>Comfort</Text>
           <PrimaryButton
             label={reduceMotion ? 'Reduce motion: on' : 'Reduce motion: off'}
             variant={reduceMotion ? 'accent' : 'outline'}
@@ -148,6 +144,7 @@ export default function PlannerProfileScreen() {
             variant={soundEnabled ? 'accent' : 'outline'}
             onPress={() => setSoundEnabled((value) => !value)}
           />
+          <LinkShare />
         </Column>
       </ScrollView>
     </Screen>
@@ -160,11 +157,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: font.display,
-    fontWeight: '700',
+    fontWeight: '800',
     color: colors.text,
   },
   note: {
     fontSize: font.body,
-    color: colors.text,
+    color: colors.textDim,
+  },
+  section: {
+    fontSize: font.caption,
+    fontWeight: '800',
+    color: colors.textDim,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
 });

@@ -18,7 +18,7 @@ export default function SupportedLayout() {
       }}
     >
       <Stack.Screen name="day" options={{ title: 'Day' }} />
-      <Stack.Screen name="break" options={{ title: 'Break' }} />
+      <Stack.Screen name="break" options={{ title: 'I need a break' }} />
     </Stack>
   );
 }

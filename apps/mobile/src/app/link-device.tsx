@@ -1,50 +1,143 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { router } from 'expo-router';
+import { useRef, useState } from 'react';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 
-import { readRole } from '../navigation/extras';
-import { ScreenScaffold } from '../ui/ScreenScaffold';
+import { acceptLink } from '../stores/linkStore';
+import { Column } from '../ui/Column';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { Screen } from '../ui/Screen';
+import { TextField } from '../ui/TextField';
+import { colors, font, space } from '../ui/theme';
 
+/**
+ * Implicit Intent analog (Ch 6): open Camera to scan a QR.
+ * PIN is the demo-safe path if camera is denied.
+ */
 export default function LinkDeviceScreen() {
-  const params = useLocalSearchParams<{ role?: string | string[] }>();
-  const role = readRole(params.role);
+  const [pin, setPin] = useState('');
+  const [status, setStatus] = useState('Type the 6-digit PIN, or scan the Planner QR.');
+  const [busy, setBusy] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
+  const handled = useRef(false);
+
+  async function finish(input: { pin?: string; qr_payload?: string }) {
+    if (busy) {
+      return;
+    }
+    setBusy(true);
+    try {
+      await acceptLink(input);
+      router.replace({ pathname: '/supported/day', params: { role: 'supported', from: 'link' } });
+    } catch (err) {
+      handled.current = false;
+      setStatus(err instanceof Error ? err.message : 'Could not link. Try a new PIN.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const cameraReady = permission?.granted === true;
 
   return (
-    <ScreenScaffold
-      title="LinkDevice"
-      note="QR is the phone feature. PIN is the demo-safe path. Camera is not opened in this stage."
-      extras={`extra role=${role}`}
-      primaryLabel="Use PIN and open day"
-      onPrimary={() => {
-        router.push({ pathname: '/supported/day', params: { role: 'supported', from: 'pin' } });
-      }}
+    <Screen
+      bottom={
+        <PrimaryButton
+          label={busy ? 'Working…' : 'Use PIN'}
+          onPress={() => {
+            Keyboard.dismiss();
+            const digits = pin.replace(/\D/g, '');
+            if (digits.length !== 6) {
+              setStatus('Enter all 6 digits.');
+              return;
+            }
+            void finish({ pin: digits });
+          }}
+        />
+      }
     >
-      <View style={styles.qrBox}>
-        <Text style={styles.qrLabel}>QR placeholder</Text>
-      </View>
-      <Text style={styles.pin}>PIN 000000</Text>
-    </ScreenScaffold>
+      <Column gap={space.md} flex={1}>
+        <Text style={styles.icon}>🔗</Text>
+        <Text style={styles.title} accessibilityRole="header">
+          Link device
+        </Text>
+        <Text style={styles.body}>{status}</Text>
+        <TextField
+          label="6-digit PIN"
+          value={pin}
+          onChangeText={(text) => setPin(text.replace(/\D/g, '').slice(0, 6))}
+          keyboardType="number-pad"
+          maxLength={6}
+          textAlign="center"
+          large
+        />
+        {cameraReady ? (
+          <View style={styles.cameraBox}>
+            <CameraView
+              style={styles.camera}
+              facing="back"
+              barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
+              onBarcodeScanned={({ data }) => {
+                if (handled.current || busy) {
+                  return;
+                }
+                handled.current = true;
+                void finish({ qr_payload: data });
+              }}
+            />
+          </View>
+        ) : (
+          <View style={styles.card}>
+            <Text style={styles.body}>
+              Camera is off. The PIN above still works. No location.
+            </Text>
+            <PrimaryButton
+              variant="outline"
+              label="Allow camera"
+              onPress={() => {
+                void requestPermission();
+              }}
+            />
+          </View>
+        )}
+      </Column>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  qrBox: {
-    marginTop: 24,
-    width: 160,
-    height: 160,
+  icon: {
+    fontSize: 44,
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: font.display,
+    fontWeight: '800',
+    color: colors.text,
+    textAlign: 'center',
+  },
+  body: {
+    fontSize: font.body,
+    lineHeight: 24,
+    color: colors.text,
+  },
+  card: {
+    backgroundColor: colors.surface,
     borderWidth: 2,
-    borderColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: colors.hairline,
+    borderRadius: 16,
+    padding: space.md,
+    gap: space.sm,
   },
-  qrLabel: {
-    fontSize: 16,
-    color: '#1A1A1A',
+  cameraBox: {
+    minHeight: 220,
+    borderRadius: 18,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: colors.hairline,
   },
-  pin: {
-    marginTop: 16,
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    letterSpacing: 4,
+  camera: {
+    flex: 1,
+    minHeight: 220,
   },
 });

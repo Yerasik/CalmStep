@@ -12,6 +12,7 @@ export class ApiError extends Error {
 type RequestOptions = {
   method?: 'GET' | 'POST';
   body?: unknown;
+  timeoutMs?: number;
 };
 
 /**
@@ -20,7 +21,8 @@ type RequestOptions = {
  */
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeoutMs = options.timeoutMs ?? REQUEST_TIMEOUT_MS;
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   const url = `${apiBaseUrl()}${path}`;
 
   try {
@@ -54,7 +56,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
       throw err;
     }
     if (err instanceof Error && err.name === 'AbortError') {
-      throw new ApiError('The server did not answer in 10 seconds.');
+      throw new ApiError(`The server did not answer in ${Math.round(timeoutMs / 1000)} seconds.`);
     }
     throw new ApiError('Cannot reach the planner server. Using the plan already on this phone.');
   } finally {

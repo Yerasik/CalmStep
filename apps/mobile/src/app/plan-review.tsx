@@ -1,13 +1,15 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { readRole } from '../navigation/extras';
 import { getLastDraft } from '../stores/planStore';
 import { approvePlanOnServer } from '../stores/serverStore';
 import { Column } from '../ui/Column';
+import { Pictogram } from '../ui/Pictogram';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { Screen } from '../ui/Screen';
+import { iconFallback } from '../ui/iconFallback';
 import { colors, font, space } from '../ui/theme';
 
 /** After approve: go to Planner Today (DECIDE after_approve = go-today). */
@@ -18,7 +20,7 @@ export default function PlanReviewScreen() {
   const [status, setStatus] = useState(
     draft
       ? `Review ${draft.plan.items.length} items. Approve caches the plan on this phone.`
-      : 'No generated plan yet. Generate on the Plan tab first. Cached Supported plan is unchanged.',
+      : 'No generated plan yet. Generate on the Plan tab first.',
   );
   const [busy, setBusy] = useState(false);
 
@@ -55,30 +57,84 @@ export default function PlanReviewScreen() {
         />
       }
     >
-      <Column gap={space.md}>
-        <Text style={styles.title} accessibilityRole="header">
-          PlanReview
-        </Text>
-        <Text style={styles.body}>{status}</Text>
-        {draft?.plan.items.map((item) => (
-          <Text key={`${item.start}-${item.title}`} style={styles.body}>
-            {item.start} {item.title}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Column gap={space.md}>
+          <Text style={styles.title} accessibilityRole="header">
+            Review
           </Text>
-        ))}
-      </Column>
+          <Text style={styles.body}>{status}</Text>
+          {draft ? (
+            <View style={[styles.badge, draft.validation.ok ? styles.badgeOk : styles.badgeBad]}>
+              <Text style={styles.badgeText}>
+                {draft.validation.ok ? '✓ Validate: ok' : `✕ ${draft.validation.violations.join('; ')}`}
+              </Text>
+            </View>
+          ) : null}
+          {draft?.plan.items.map((item) => (
+            <View key={`${item.start}-${item.title}`} style={styles.itemCard}>
+              <Pictogram size={56} label={item.title} fallback={iconFallback(item.icon_id)} />
+              <Text style={styles.itemTitle}>
+                {item.start}–{item.end}  {item.title}
+              </Text>
+            </View>
+          ))}
+          {draft?.plan.supports.map((support) => (
+            <Text key={`${support.type}-${support.after_item}`} style={styles.body}>
+              ☕ {support.reason}
+            </Text>
+          ))}
+        </Column>
+      </ScrollView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    paddingBottom: space.md,
+  },
   title: {
     fontSize: font.display,
-    fontWeight: '700',
+    fontWeight: '800',
     color: colors.text,
   },
   body: {
     fontSize: font.body,
     lineHeight: 24,
     color: colors.text,
+  },
+  itemCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.hairline,
+    borderRadius: 16,
+    padding: space.md,
+  },
+  itemTitle: {
+    fontSize: font.title,
+    fontWeight: '700',
+    color: colors.text,
+    flex: 1,
+  },
+  badge: {
+    alignSelf: 'flex-start',
+    minHeight: 32,
+    paddingHorizontal: 14,
+    borderRadius: 16,
+    justifyContent: 'center',
+  },
+  badgeOk: {
+    backgroundColor: colors.accent,
+  },
+  badgeBad: {
+    backgroundColor: colors.danger,
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: font.body,
+    fontWeight: '700',
   },
 });

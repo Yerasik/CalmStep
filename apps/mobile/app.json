@@ -11,7 +11,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "hk.hkucs.calmstep",
       "infoPlist": {
-        "NSCameraUsageDescription": "Placeholder for Stage 10+: CalmStep uses the camera to scan a linking QR code.",
+        "NSCameraUsageDescription": "CalmStep uses the camera to scan a linking QR code from the Planner device. You can type a PIN instead.",
         "NSMicrophoneUsageDescription": "Placeholder for optional loudness later. CalmStep does not store recordings.",
         "NSLocalNetworkUsageDescription": "CalmStep talks to the planner API on your local Wi-Fi so the iPhone can reach the Mac.",
         "NSAppTransportSecurity": {
@@ -20,11 +20,18 @@
       }
     },
     "extra": {
-      "apiBaseUrl": "http://172.20.10.4:8080"
+      "apiBaseUrl": "https://copyright-chuck-stress-sufficient.trycloudflare.com"
     },
     "plugins": [
       "expo-router",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "CalmStep uses the camera to scan a linking QR code from the Planner device. You can type a PIN instead.",
+          "recordAudioAndroid": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

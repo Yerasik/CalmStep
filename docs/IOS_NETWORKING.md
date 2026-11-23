@@ -4,12 +4,14 @@ The course lecture uses Android `INTERNET` in the manifest. This project is iPho
 
 ## How the phone reaches FastAPI
 
-1. Mac and iPhone on the same Wi-Fi.
-2. FastAPI binds `0.0.0.0:8080` (all interfaces), not only loopback.
-3. The app uses `http://<Mac-LAN-IP>:8080` from Expo `extra.apiBaseUrl`.
-4. `localhost` / `127.0.0.1` on the iPhone is the phone itself. It will never hit the Mac.
+1. FastAPI binds `0.0.0.0:8081` on this machine. Port 8080 is often taken on shared lab machines.
+2. Expo Go’s tunnel only carries the JavaScript bundle. It does not forward port 8081, and Expo Go often blocks cleartext `http://` to a LAN address.
+3. A Cloudflare HTTPS tunnel forwards the phone to this FastAPI. The app ignores `http://` base URLs and uses `extra.apiBaseUrl` when it is `https://`.
+4. `localhost` / `127.0.0.1` on the iPhone is the phone itself.
 
-Current demo IP (update when the Mac joins another network): `http://172.20.10.4:8080`
+Current public API (changes each time the tunnel is restarted): `https://copyright-chuck-stress-sufficient.trycloudflare.com`
+
+LAN address of this machine, if you are on the same Wi-Fi and not using Expo Go: `http://10.21.36.11:8081`
 
 Auth on the LAN: none.
 
